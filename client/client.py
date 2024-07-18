@@ -5,7 +5,7 @@ class Client:
     Represents a client for making OAuth2 requests.
     """
 
-    def __init__(self, client_id: str, client_secret: str, scope: list[str], url: str):
+    def __init__(self, client_id: str, client_secret: str, scope: list[str], uri: str):
         """
         Initializes a new instance of the Client class.
 
@@ -13,7 +13,7 @@ class Client:
             client_id (str): The client ID.
             client_secret (str): The client secret.
             scope (list[str]): The list of scopes.
-            url (str): The URL for obtaining the access token.
+            uri (str): The URI for obtaining the access token.
 
         Raises:
             ValueError: If any of the input parameters are invalid.
@@ -21,7 +21,7 @@ class Client:
         self.__client_id = self.__validate_client_id(client_id),
         self.__client_secret = self.__validate_client_secret(client_secret),
         self.__scope = self.__validate_scope(scope),
-        self.__url = self.__validate_url(url)
+        self.__uri = self.__validate_uri(uri)
         
     @property
     def client_id(self) -> str:
@@ -54,14 +54,14 @@ class Client:
         return self.__scope
     
     @property
-    def url(self) -> str:
+    def uri(self) -> str:
         """
-        Gets the URL for obtaining the access token.
+        Gets the URI for obtaining the access token.
 
         Returns:
-            str: The URL for obtaining the access token.
+            str: The URI for obtaining the access token.
         """
-        return self.__url
+        return self.__uri
     
     def __validate_client_id(self, client_id: str) -> str:
         """
@@ -122,26 +122,26 @@ class Client:
             raise ValueError('Scope must be a list of strings')
         return scope
     
-    def __validate_url(self, url: str) -> str:
+    def __validate_uri(self, uri: str) -> str:
         """
-        Validates the URL.
+        Validates the URI.
 
         Args:
-            url (str): The URL to validate.
+            uri (str): The URI to validate.
 
         Returns:
-            str: The validated URL.
+            str: The validated URI.
 
         Raises:
-            ValueError: If the URL is invalid.
+            ValueError: If the URI is invalid.
         """
-        if url is None:
-            raise ValueError('URL cannot be None')
-        if not isinstance(url, str):
-            raise ValueError('URL must be a string')
-        if not url.startswith('https://'):
-            raise ValueError('URL must start with https')
-        return url
+        if uri is None:
+            raise ValueError('URI cannot be None')
+        if not isinstance(uri, str):
+            raise ValueError('URI must be a string')
+        if not uri.startswith('https://'):
+            raise ValueError('URI must start with https')
+        return uri
     
     def obtain_jwt(self) -> str:
         """
@@ -159,4 +159,4 @@ class Client:
             'client_secret': self.client_secret,
             'scope': self.scope
         }
-        return requests.post(self.url, data=payload).json().get('access_token')
+        return requests.post(self.uri, data=payload).json().get('access_token')
